@@ -210,9 +210,6 @@ def dibujar_H(imagen, height, width):
 	img_filtrada[div_height * 4:div_height * 7,div_width * 2: div_width + (2 * div_width ) ] = region.astype(np.uint8)
 
 
-
-
-
 	return Image.fromarray(img_filtrada)
 
 
@@ -225,11 +222,34 @@ def menu():
 	return input("Ingresa una opcion para poder continuar: ")
 
 
+def leer_img():
+	asdf = input("\n\n\nDeseas seguir ejecutando el programa(ingresa 'salir', '-1', exit para 'salir'):")
+	if asdf in ['salir', '-1', 'exit']:
+		print("Saliendo del programa.\n\n\n")
+		return "-1"
+	else:
+		return "asdfas"
+
+def agregar_imagen():
+	imag = input("Ingresa el nombre del archivo e imagen con su extension para colrearla: ")
+	try:
+		imagenes = Image.open(imag)
+		return imagenes
+	except FileNotFoundError:
+		print(f"Error, archivo no encontrado, {menu} \n\n\n")
+	except Exception as e:
+		print(f"Ocurrio un error {e}  \n\n\n")
+
+
+
 if __name__ == "__main__":
-	im = Image.open('prueba.jpeg')
-	width, height = im.size
 	op = 'asfd'
 	while op != '-1':
+		op = leer_img()
+		if op == "-1":
+			break
+		im = agregar_imagen()
+		width, height = im.size
 		op = menu()
 		if op == '1':
 			print("\n\n\nColoreando imagen de manera vertical\n\n\n")
@@ -243,7 +263,8 @@ if __name__ == "__main__":
 		elif op == '3':
 			caso = True
 			while caso:
-				inicial = input("Ingresa la vocal para colorear (H,U,A): ")
+				inicial = input("Ingresa la vocal para colorear (H,U,A): ").upper()
+
 				if inicial == 'H':
 					print("Se imprimira la inicial de Hector (H)")
 					new_im = dibujar_H(im,height,width)
