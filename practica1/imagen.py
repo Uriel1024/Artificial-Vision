@@ -385,12 +385,13 @@ def dibujar_U(imagen,height,width):
 	
 
 def menu_imagenes():
-	print("\n\n\n1.Imagen de Berserk")
-	print("2.Imagen de evangelon")
-	print("3.Imagen de evangelon(variante)")
-	print("4.Imagen de Berserk(variante)")
-	print("5.Imagen de perfect blue")
-	print("6.Imagen de The bends")
+	print("\n\n\n1.Imagen de Berserk.")
+	print("2.Imagen de evangelon.")
+	print("3.Imagen de evangelon(variante).")
+	print("4.Imagen de Berserk(variante).")
+	print("5.Imagen de perfect blue.")
+	print("6.Imagen de The bends.")
+	print("7.Imagen de luna.")
 	return input("Selecciona una opcion para poder colorearla(-1 para poder salir): ")
 
 
@@ -425,12 +426,12 @@ def seleccion(im, op):
 				new_im = dibujar_H(im,height,width)
 				new_im.show()
 				caso = False
-			if inicial == 'U':
+			elif inicial == 'U':
 				print("Se imprimira la inicial de Uriel (U).\n\n\n")
 				new_im = dibujarU(im,height,width)
 				new_im.show()
 				caso = False
-			if inicial == 'A':
+			elif inicial == 'A':
 				print("Se imprimira la inicial de Alejandro (A).\n\n\n")
 				new_im = dibujarA(im,height,width)
 				new_im.show()
@@ -490,6 +491,13 @@ if __name__ == "__main__":
 					seleccion(im,op1)
 		elif sel == '6':
 			im = Image.open('img6.jpeg')
+			while op1 != '-1':
+				op1 = menu()
+				if op1 == '-1':
+					break
+				seleccion(im,op1)
+		elif sel == '7':
+			im = Image.open('img7.jpg')
 			while op1 != '-1':
 				op1 = menu()
 				if op1 == '-1':
