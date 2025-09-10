@@ -1,11 +1,12 @@
 from PIL import Image
 import numpy as np
 
+intensidad = 255 * .90
 
 #funcion para aplicar el color, verde, azul rojo a la imagen (manera vertical)
-def color_vertical(imagen, height, width):
+def color_vertical(imagen, height, width):	
 	
-	intensidad = .7
+
 
 	matriz_img = np.array(imagen)
 
@@ -20,10 +21,10 @@ def color_vertical(imagen, height, width):
 	region = region.astype(np.float32)
 
 
-	region = np.clip(region,0,255)
+	region = np.clip(region,0,255 )
 
-	region[...,1] = (1- intensidad)
-	region[...,2] = (1- intensidad)
+	region[...,1] = (255- intensidad)
+	region[...,2] = (255- intensidad)
 
 	img_filtrada[0:height, 0:div_width] = region.astype(np.uint8)
 
@@ -62,7 +63,6 @@ def color_vertical(imagen, height, width):
 #funcion para aplicar el color (manera horizontal)
 def color_horizontal(imagen, height, width):
 	
-	intensidad = .7
 
 	matriz_img = np.array(imagen)
 
@@ -115,7 +115,7 @@ def color_horizontal(imagen, height, width):
 	return Image.fromarray(img_filtrada)
 
 def pintar_h(imagen, height, width):
-	intensidad = .7
+	
 	matriz_img = np.array(imagen)
 
 	img_filtrada = matriz_img.copy()
@@ -127,7 +127,6 @@ def pintar_h(imagen, height, width):
 	#funcion para aplicar el color, verde, azul rojo en forma de H a la imagen
 def dibujar_H(imagen, height, width):
 	
-	intensidad = .7
 
 	matriz_img = np.array(imagen)
 
@@ -216,8 +215,7 @@ def dibujar_H(imagen, height, width):
 
 #funcion para aplicar el color, verde, azul rojo en forma de U a la imagen
 def dibujarU(imagen, height, width):
-	
-	intensidad = .7
+		
 
 	matriz_img = np.array(imagen)
 
@@ -306,7 +304,6 @@ def dibujarU(imagen, height, width):
  
 #funcion para aplicar el color, verde, azul rojo en forma de U a la imagen
 def dibujarA(imagen, height, width):
-	intensidad = .7
 	matriz_img = np.array(imagen)
 	img_filtrada = matriz_img.copy()
 	div_width = width //24
