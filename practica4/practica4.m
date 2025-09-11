@@ -3,23 +3,15 @@
 
 clc
 % DEFINIENDO LAS CLASES
-clases = cell(1,8);
 
-for i = 1:8
-    inf  = ((i -1)*3 + 1);
-    sup  = i*3;
-    clases{i} = randi([inf,sup],2,5);
-    
-end
-
-c1= randi([1,3],2,5);
-c2= randi([3,6],2,5);
-c3= randi([6,9],2,5);
-c4= randi([9,12],2,5);
-c5= randi([12,15],2,5);
-c6= randi([15,18],2,5);
-c7= randi([18,21],2,5);
-c8= randi([21,24],2,5);
+c1= randi([0,3],2,8);
+c2= randi([3,6],2,8);
+c3= randi([6,9],2,8);
+c4= randi([9,12],2,8);
+c5= randi([12,15],2,8);
+c6= randi([15,18],2,8);
+c7= randi([18,21],2,8);
+c8= randi([21,24],2,8);
 
 
 op = 121;
@@ -36,7 +28,7 @@ vector=[vx;vy];
 %CALCULANDO LOS PARÁMETROS DE CADA CLASE
 
 media1=mean(c1,2);
-media2=mean(C2,2);
+media2=mean(c2,2);
 media3=mean(c3,2);
 media4=mean(c4,2);
 media5=mean(c5,2);
@@ -69,7 +61,7 @@ fprintf('el vector desconocido pertenece a la clase %d\n',dato)
 plot(c1(1,:),c1(2,:),'ro','MarkerSize',10,'MarkerFaceColor','r')
 grid on
 hold on
-plot(C2(1,:),C2(2,:),'bo','MarkerSize',10,'MarkerFaceColor','b')
+plot(c2(1,:),c2(2,:),'bo','MarkerSize',10,'MarkerFaceColor','b')
 plot(c3(1,:),c3(2,:),'go','MarkerSize',10,'MarkerFaceColor','k')
 plot(c4(1,:),c3(2,:),'bo','MarkerSize',10,'MarkerFaceColor','m')
 plot(c5(1,:),c3(2,:),'go','MarkerSize',10,'MarkerFaceColor','c')
