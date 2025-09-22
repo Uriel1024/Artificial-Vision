@@ -46,7 +46,7 @@ while (op ~= -1)
     
     % Determinar la clase más cercana
     [~, clase_asignada] = min(distancias);
-    minimo = min(distancias);
+    minimo = min(distancias)
     if minimo > 100
         disp(['El vector no pertenece a ninguna clase debido a que ' num2str(minimo)]);
         disp('es mayor al umbral de 100 puntos para poder pertenecer a alguna clase')
@@ -55,7 +55,6 @@ while (op ~= -1)
         
             
         %para poder graficar
-        colores = {'r','g','b','c','m','y',[.5, .5, .5], 'k'};
         leyendas = cell(1,num_cl);
         figure;
         hold on;
@@ -64,8 +63,11 @@ while (op ~= -1)
         for i = 1: num_cl
             x_coords = matrices{i}(1,:);
             y_coords = matrices{i}(2,:);
-            color = randi([1,length(colores)]);
-            plot(x_coords,y_coords,'o','Color',colores{color}, "MarkerSize",8,"lineWidth",1.5);
+            
+            %crea el color de manear aleatoria
+            color_rgb = rand(1,3);
+
+            plot(x_coords,y_coords,'o','Color',color_rgb, "MarkerSize",8,"lineWidth",1.5);
             leyendas{i} = ['Clase ' num2str(i)];
         end
         leyendas{num_cl + 1} = ['Vector'];
