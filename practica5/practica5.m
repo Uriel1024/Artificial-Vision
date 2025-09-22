@@ -3,19 +3,36 @@ clc
 clear
 close all
 
-num_cl = input('Ingresa el numero de clases a generar: ');
+% Solicitar al usuario que ingrese el número de clases
+while true
+    num_cl = input('Ingresa el numero de clases a generar: ');
+    if (num_cl <= 0 || num_cl > 49)
+        disp('NO es posible generar más de 49 clases, por favor ingresa un número válido.')
+    else
+        break
+    end
+end
+
 
 %matriz para guardar las clases 
 matrices = cell(1,num_cl);
 
-num_de_objetos = input('Ingresa el numero de objetos por clase: ');
-%para seleccionar un color al azar para cada una de las clases
+while true
+    num_de_objetos = input('Ingresa el numero de objetos por clase: ');
+    if num_de_objetos <= 0
+        disp('El numero de objetos debe ser mayor que 0')
+    else
+        break
+    end
+end
+
+
 
 
 for i = 1:num_cl    
     mult_x = randi(15);
     mult_y = randi(15);
-    centro_x = randi([0, 20])*mult_x; 
+    centro_x = randi([-20, 20])*mult_x; 
 
     centro_y = randi([0, 20])*mult_y;
 
