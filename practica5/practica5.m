@@ -46,13 +46,13 @@ while (op ~= -1)
     
     % Determinar la clase más cercana
     [~, clase_asignada] = min(distancias);
-    minimo = min(distancias)
+    minimo = min(distancias);
     if minimo > 100
         disp(['El vector no pertenece a ninguna clase debido a que ' num2str(minimo)]);
         disp('es mayor al umbral de 100 puntos para poder pertenecer a alguna clase')
     else
         disp(['El vector pertenece a la clase: ' num2str(clase_asignada)]);
-        
+        disp(['Con una distancia de ' num2str(minimo)])
             
         %para poder graficar
         leyendas = cell(1,num_cl);
