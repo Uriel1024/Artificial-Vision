@@ -1,13 +1,12 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from PIL import ImageTk
+from PIL import Image, ImageTk
 import numpy as np
-from PIL import Image
 
-
+# ================== Funciones del algoritmo de compresión predictiva ==================
 # Suma y cuenta los adyacentes no cero (8 vecinos)
-def suma(arr,i,j):
-    suma = 0
+def suma(arr, i, j):
+    suma_val = 0
     cuenta = 0
     filas, columnas = arr.shape
     for dx in [-1, 0, 1]:
@@ -17,15 +16,15 @@ def suma(arr,i,j):
             ni, nj = i + dx, j + dy
             if 0 <= ni < filas and 0 <= nj < columnas:
                 if arr[ni, nj] != 0:
-                    suma += arr[ni, nj]
+                    suma_val += arr[ni, nj]
                     cuenta += 1
     if cuenta == 0:
         return 0
-    return suma / cuenta 
+    return suma_val / cuenta
 
-#Crea el arreglo de prediccion
+# Crea el arreglo de predicción
 def crear_pre(arr):
-    arr_pre = np.zeros_like(arr)
+    arr_pre = np.zeros_like(arr, dtype=np.float64)
     arr_pre[0, :] = arr[0, :]
     arr_pre[:, 0] = arr[:, 0]
     for i in range(arr.shape[0]):
@@ -34,32 +33,28 @@ def crear_pre(arr):
                 arr_pre[i, j] = suma(arr, i, j)
     return arr_pre
 
+def min_max(arr):
+    return np.min(arr), np.max(arr)
 
-#Crea la imagen comprimida
+# Crea la imagen comprimida
 def crear_comprimida(arr, bit):
-    min_val,max_val = min_max(arr)
+    min_val, max_val = min_max(arr)
     if max_val == min_val:
-        return np.zeros_like(arr, dtype=int), min_val, 0
-    # Calcula el tamaño de cada intervalo
+        return np.zeros_like(arr, dtype=int)
     intervalo = (max_val - min_val) / (2**bit)
-    # Asigna código de intervalo a cada valor
     codigos = ((arr - min_val) / intervalo).astype(int)
-    codigos = np.clip(codigos, 0, (2**bit) - 1).astype(int)
+    codigos = np.clip(codigos, 0, (2**bit) - 1)
     return codigos
 
 # Recupera la imagen usando el valor central de cada intervalo
-def crear_recuperada(arr_com,arr_pre,arr_error,bit):
-    min_val,max_val = min_max(arr_error)
+def crear_recuperada(arr_com, arr_pre, arr_error, bit):
+    min_val, max_val = min_max(arr_error)
     if max_val == min_val:
         return arr_pre
     intervalo = (max_val - min_val) / (2**bit)
     arr_recuperada = min_val + (arr_com + 0.5) * intervalo
     arr_recuperada += arr_pre
-    arr_recuperada = np.round(arr_recuperada)
-    return arr_recuperada
-
-def min_max(arr):
-    return np.min(arr), np.max(arr)
+    return np.round(arr_recuperada)
 
 # Función para calcular la relación señal/ruido (SNR)
 def calcular_snr(original, recuperada):
@@ -71,28 +66,24 @@ def calcular_snr(original, recuperada):
         return float('inf')
     return 10 * np.log10(signal_power / noise_power)
 
-def crear_pre_causal(arr):
-    arr_pre = np.zeros_like(arr, dtype=np.float64)
-    # El valor predicho en (i, j) es el valor real en (i, j-1)
-    arr_pre[:, 1:] = arr[:, :-1]
-    arr_pre[0, 0] = arr[0, 0]
-    return arr_pre
-
+# ================== Lógica de la interfaz Tkinter ==================
 class App:
     def __init__(self, root):
         self.root = root
         self.root.title("Compresión y Recuperación de Imágenes")
 
         self.img_options = [
-            "1. Berserk",
-            "2. Evangelion",
-            "3. Evangelion (variante)",
-            "4. Berserk (variante)",
-            "5. Perfect Blue",
-            "6. The Bends",
-            "7. Full Metal Alchemist"
+            "1. Berserk.jpeg",
+            "2. Evangelion.jpeg",
+            "3. Evangelion (variante).jpeg",
+            "4. Berserk (variante).jpeg",
+            "5. Perfect blue.jpeg",
+            "6. The bends.jpeg",
+            "7. Full metal alchemist.jpeg",
+            "8. In rainbows.jpeg"
         ]
-        self.img_files = [f"img{i}.jpeg" for i in range(1,8)]
+
+        self.img_files = [f"img{i}.jpeg" for i in range(1, 9)]
 
         self.selected_img = tk.StringVar(value=self.img_options[0])
         self.bits = tk.IntVar(value=4)
@@ -117,7 +108,7 @@ class App:
             lbl.grid(row=3, column=i, padx=5, pady=5)
             self.img_labels.append(lbl)
 
-        self.img_titles2 = [ "Comprimida", "Recuperada"]
+        self.img_titles2 = ["Comprimida", "Recuperada"]
         for i, title in enumerate(self.img_titles2):
             ttk.Label(root, text=title).grid(row=4, column=i)
             lbl = ttk.Label(root)
@@ -131,32 +122,31 @@ class App:
         idx = self.img_options.index(self.selected_img.get())
         img_path = self.img_files[idx]
         bit = self.bits.get()
+
         if not (1 <= bit <= 8):
             messagebox.showerror("Error", "El número de bits debe estar entre 1 y 8.")
             return
+
         try:
             img = Image.open(img_path).convert('L')
+            arr = np.array(img, dtype=np.uint8)
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo abrir la imagen: {e}")
             return
-        arr = np.array(img)
-
-        arr_pre = crear_pre_causal(arr)
-
+        
         arr_pre = crear_pre(arr)
         arr_error = arr - arr_pre
         arr_com = crear_comprimida(arr_error, bit)
         arr_recuperada = crear_recuperada(arr_com, arr_pre, arr_error, bit)
-
-        # Imágenes procesadas
+        
         imgs = [
             img,
             Image.fromarray(np.round(arr_pre).astype(np.uint8)),
-            Image.fromarray((np.round(arr_error)+128).astype(np.uint8)),
+            Image.fromarray((np.round(arr_error) + 128).astype(np.uint8)),
             Image.fromarray((arr_com * (255 // (2**bit - 1))).astype(np.uint8)),
-            Image.fromarray(np.clip(arr_recuperada,0,255).astype(np.uint8))
+            Image.fromarray(np.clip(arr_recuperada, 0, 255).astype(np.uint8))
         ]
-        # Nuevo tamaño para las imágenes
+        
         nuevo_tamano = (300, 300)
         for lbl, im in zip(self.img_labels, imgs):
             im_resized = im.resize(nuevo_tamano)
@@ -170,8 +160,6 @@ class App:
 # Ejecutar interfaz
 if __name__ == "__main__":
     root = tk.Tk()
-    # Aumentar tamaño de la ventana principal
     root.geometry("1600x500")
     app = App(root)
     root.mainloop()
-
