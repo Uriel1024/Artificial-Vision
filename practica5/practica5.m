@@ -20,26 +20,34 @@ matrices = cell(1,num_cl);
 while true
     num_de_objetos = input('Ingresa el numero de objetos por clase: ');
     if num_de_objetos <= 0
-        disp('El numero de objetos debe ser mayor que 0')
+        disp('El numero de objetos debe ser mayor que 0.')
     else
         break
     end
 end
 
-
-
+while true
+    disper_x = input('Ingresa la dispersion en x: ');
+    disper_y = input('Ingresa la dispersion en y: ');
+    if (disper_x <= 0 || disper_y <= 0)
+        disp('La dispersion debe de ser diferente de 0.');
+    else   
+        break
+    end
+end
 
 for i = 1:num_cl    
-    mult_x = randi(15);
-    mult_y = randi(15);
-    centro_x = randi([-20, 20])*mult_x; 
+    fprintf('Ingresa el centroide de x para la clase %d\n ',i);
+    centro_x = input(":");
+    fprintf('Ingresa el centroide de y para la clase %d\n',i);
+    centro_y = input(":");
 
-    centro_y = randi([0, 20])*mult_y;
+    matrices{i} = [(centro_x + randn(1, num_de_objetos)*disper_x); ...
+                   (centro_y + randn(1, num_de_objetos)*disper_y)];
 
-    matrices{i} = [centro_x + randn(1, num_de_objetos); ...
-                   centro_y + randn(1, num_de_objetos)];
 end 
     
+
 
 op = 0 ;
 while (op ~= -1)
@@ -64,7 +72,7 @@ while (op ~= -1)
     % Determinar la clase más cercana
     [~, clase_asignada] = min(distancias);
     minimo = min(distancias);
-    if minimo > 100
+    if minimo > 800
         disp(['El vector no pertenece a ninguna clase debido a que ' num2str(minimo)]);
         disp('es mayor al umbral de 100 puntos para poder pertenecer a alguna clase')
     else
