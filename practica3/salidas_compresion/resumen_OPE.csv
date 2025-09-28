@@ -1,2 +1,0 @@
-imagen,modo,parametro,descripcion,MSE,PSNR_dB,comp_ratio_teorico,errorx128
-img1.jpeg,bits,7,"Cuantización 7 bits, 128 niveles (paso=2).",0.573,50.5491,1.1429,sí
