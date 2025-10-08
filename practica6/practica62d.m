@@ -35,9 +35,7 @@ for i = 1:num_cl
         disper_x = input(': ');
         fprintf('Ingresa la dispersion en y para la clase %d\n ',i);
         disper_y = input(': ');
-        fprintf('Ingresa la dispersion en z para la clase %d\n', i);
-        disper_z = input(': ')
-        if (disper_x <= 0 || disper_y <= 0 || disper_z <= 0)
+        if (disper_x <= 0 || disper_y <= 0)
             disp('La dispersion debe de ser diferente de 0.');
         else   
             break
@@ -48,12 +46,9 @@ for i = 1:num_cl
     centro_x = input(":");
     fprintf('Ingresa el centroide de y para la clase %d\n',i);
     centro_y = input(":");
-    fprintf('Ingresa el centroide de z para la clase %d\n',i);
-    centro_z = input(":")
 
     matrices{i} = [(centro_x + randn(1, num_de_objetos)*disper_x); ...
-                   (centro_y + randn(1, num_de_objetos)*disper_y); ...
-                   (centro_z + randn(1, num_de_objetos)*disper_z)];
+                   (centro_y + randn(1, num_de_objetos)*disper_y)];
 end 
    
 op = 0 ;
@@ -61,8 +56,7 @@ while (op ~= -1)
     %pedimos el vector al usuario
     vx=input('dame el valor de la coord en x=');
     vy=input('dame el valor de la coord en y=');
-    vz=input('dame el valor de la coord en z=');
-    vector=[vx;vy;vz];
+    vector=[vx;vy];
 
         medias = cell(1,num_cl);
     distancias = zeros(1, num_cl);
@@ -96,14 +90,13 @@ while (op ~= -1)
             for i = 1:num_cl
                 disp("Has escogido la distancia Mohalanobis. ")
                 matriz_clase = matrices{i};
-                media_clase = medias{j};
-                N = size(matriz_clase,2);
-                datos = matriz_clase - media_clase;
-                datost = datos';
-                sigma = (1/N) * datos * datost;
-                sigma = inv(sigma);
-                distancias(i) = sqrt((vector' * sigma) * vector);
-        
+                media_clase = medias{i};
+                matriz_cov = cov(matriz_clase');
+                sigma_inv = inv(matriz_cov);
+                diff_vector = vector - media_clase;
+                distancia_cad = (diff_vector' * sigma_inv) * diff_vector;
+                distancias(i) = sqrt(distancia_cad);
+
             end 
  
     end
@@ -128,25 +121,20 @@ while (op ~= -1)
     for i = 1: num_cl
         x_coords = matrices{i}(1,:);
         y_coords = matrices{i}(2,:);
-        z_coords = matrices{i}(3,:);
         %crea el color de manear aleatoria
         color_rgb = rand(1,3);
 
-        plot3(x_coords,y_coords,z_coords,'o','Color',color_rgb, "MarkerSize",8,"lineWidth",1.5);
+        plot(x_coords,y_coords,'o','Color',color_rgb, "MarkerSize",8,"lineWidth",1.5);
         leyendas{i} = ['Clase ' num2str(i)];
     end
     leyendas{num_cl + 1} = ['Vector'];
-
-
-
-    plot3(vector(1,:),vector(2,:),vector(3,:),'go','MarkerSize',10,'MarkerFaceColor','g')
+    
+    plot(vector(1,:),vector(2,:),'go','MarkerSize',10,'MarkerFaceColor','g')
     xlabel('Eje X');
     ylabel('Eje Y');
-    zlabel('Eje Z');
     title('Clasificación de vectores por clase');
     legend(leyendas);
     grid on;
-    view(3);
     hold off;
 
     
