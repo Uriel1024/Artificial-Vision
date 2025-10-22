@@ -166,7 +166,7 @@ Y_test = [];
 
 
 for i = 1:num_cl
-    clase_data = matrices{i};
+    clase_data = matrices{i}';
     N_clase = size(clase_data,1);
     
     % Permutar los índices para una selección aleatoria
@@ -186,7 +186,7 @@ end
 
 [precision_cv] = clasificar_y_evaluar(X_entrenamiento, Y_entrenamiento, X_test, Y_test, num_cl, 1);
 fprintf('Precision de 50/50 Cross Validation usando dist euclidiana %.2f', precision_cv)
-precision_cv = 0;
+
 [precision_cv] = clasificar_y_evaluar(X_entrenamiento, Y_entrenamiento, X_test, Y_test, num_cl, 2);
 fprintf('\nPrecision de 50/50 Cross Validation usando mohalanobis %.2f \n\n', precision_cv)
 
