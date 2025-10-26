@@ -104,7 +104,7 @@ end
 
 
 % Crear clases
-img=imread('img1.jpeg');
+img=imread('prueba.jpg');
 figure(1)
 imshow(img)
 title("Practica 8")
